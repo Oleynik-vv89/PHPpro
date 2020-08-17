@@ -16,7 +16,6 @@ class Good
         $this->info = $info;
         $this->price = $price;
     }
-
   
     public function display():
     {
@@ -42,8 +41,6 @@ final class BreadGood extends Good
 }
 
 ?>
-
-
 
 Задание 5. 
 Выведется 1234, потому-что в данном случае будут созданы два экземпляра одного класса 
