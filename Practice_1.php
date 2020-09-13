@@ -2,44 +2,63 @@
 
 #Задание 1-4.
 
-class Good
+class PriceTag
 {
     public $id;
-    protected $name;
-    private $info;
+    protected $nameGood;
     public $price;
 
-    public function __construct(int $id, string $name, $info, $price)
+    public function __construct($id, $nameGood, $price)
     {
         $this->id = $id;
-        $this->name = $name;
-        $this->info = $info;
+        $this->nameGood = $nameGood;
         $this->price = $price;
     }
   
-    public function display():
-    {
-        
+    public function display() {
+	$i = "Название товара: {$this->nameGood}; ";
+	$i.= "Цена товара: {$this->price} руб.; ";
+	$i.= "Артикул {$this->id}; ";
+	$i.= "</br>";
+	return $i;
     }
 
-    private function getPrice()
+    function getPrice() 
     {
-       
+	return $this->Price;
     }
 }
 
-final class BreadGood extends Good
+class Discount extends PriceTag
 {
-    public $date;
+    public $newPrice;
 
-    public function __construct(int $id, string $name, $info, $price, $date)
+    public function __construct($id, $nameGood, $price, $newPrice)
     {
-        $this->date = $date;
-        parent::__construct($id, $name, $info, $price);
+        $this->newPrice = $newPrice;
+        parent::__construct($id, $nameGood, $price);
+    }
+    
+    function getDiscountAmount() 
+    {
+	return $discountAmount = ($this->price - $this->newPrice);
     }
 
+public function display() {
+	$i = "Название товара: {$this->nameGood}; ";
+	$i.= "Цена товара: {$this->newPrice} руб.; ";
+	$i.= "Старая цена: {$this->price} руб.; ";
+	$i.= "Скидка : {$this->getDiscountAmount()} руб.; ";
+	$i.= "Артикул {$this->id}; ";
+	$i.= "</br>";
+	return $i;
+    }
 }
 
+$price = new PriceTag(12548, "Книга", 2500);
+$sale = new Discount(25483, "Книга", 2500, 1500);
+echo $price->display();
+echo $sale->display();
 ?>
 
 Задание 5. 
