@@ -1,19 +1,17 @@
 <?php
+namespace App\services;
 
 class Autoload
 {
-    const DIRS = [
-         'services', 'models'
-    ];
-
     public function load($className)
     {
-        foreach (static::DIRS as $dir) {
-            $fileName = dirname(__DIR__) . "/{$dir}/{$className}.php";
-            if (file_exists($fileName)) {
-                include $fileName;
-                break;
-            }
+        $file = str_replace(
+                ['App\\', '\\'],
+                [dirname(__DIR__) . '/', '/'],
+                $className
+            ) . '.php';
+        if (file_exists($file)) {
+            include $file;
         }
     }
 }
