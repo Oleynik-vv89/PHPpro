@@ -1,9 +1,12 @@
 <?php
+namespace App\models;
+
+use App\services\DB;
 
 abstract class Model
 {
     /**
-     * @var IDB
+     * @var DB
      */
     protected $db;
 
@@ -14,7 +17,7 @@ abstract class Model
      */
     abstract protected function getTableName():string;
 
-    public function __construct(IDB $db)
+    public function __construct(DB $db)
     {
         $this->db = $db;
     }
