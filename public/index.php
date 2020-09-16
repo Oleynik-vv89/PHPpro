@@ -10,3 +10,4 @@ $bd = new DB();
 $good = new Good($db);
 var_dump($good->getOne(12));
 var_dump($good->getAll());
+
