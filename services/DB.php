@@ -1,19 +1,15 @@
 <?php
 
-namespace test\asd;
+namespace App\services;
 
-class DB implements IDB
+class DB 
 {
-    use TCalc;
-
     public function find($sql)
     {
-        $this->echoTest();
-        return 'find ' . $sql;
+        return 'find' . $sql;
     }
-
     public function findAll($sql)
     {
-        return 'findAll ' . $sql;
+        return 'findAll' . $sql;
     }
 }
