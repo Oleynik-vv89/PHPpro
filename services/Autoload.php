@@ -9,7 +9,8 @@ class Autoload
                 ['App\\', '\\'],
                 [dirname(__DIR__) . '/', '/'],
                 $className
-            ) . '.php';
+            );
+        $file .= '.php';
         if (file_exists($file)) {
             include $file;
         }
