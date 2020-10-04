@@ -5,78 +5,88 @@ use App\services\DB;
 
 /**
  * Class Model
+ * @package app\models
  * @property $id
  */
 abstract class Model
 {
     /**
-     * @var DB
-     */
-    protected $db;
-
-    /**
      * Метод для
      *
      * @return mixed
      */
-    abstract protected function getTableName(): string;
+    abstract protected static function getTableName():string;
 
     /**
-     * Model constructor.
+     * @return DB
      */
-    public function __construct()
+    protected static function getDB()
     {
-        $this->db = DB::getInstance();
+        return DB::getInstance();
     }
 
-
-    public function getOne($id)
+    public static function getOne($id)
     {
-        $tableName = $this->getTableName();
-        $sql = "SELECT * FROM {$tableName} WHERE id = :id";
-        return $this->db->findObject($sql, static::class, [':id' => $id]);
+        $tableName = static::getTableName();
+        $sql = "SELECT * FROM {$tableName} WHERE id = :id ";
+        $params = [':id' => $id];
+        return static::getDB()->findObject($sql, static::class, $params);
     }
 
-    public function getAll()
+    public static function getAll()
     {
-        $tableName = $this->getTableName();
+        $tableName = static::getTableName();
         $sql = "SELECT * FROM {$tableName}";
-        return $this->db->findObjects($sql, static::class);
+        return static::getDB()->findObjects($sql, static::class);
     }
 
-    public function insert()
+    protected function insert()
     {
-        $columns = [];
+        $fields = [];
         $params = [];
-        foreach ($this as $key => $value) {
-            if ($key === 'db') {
+        foreach ($this as $fieldName => $value) {
+            if ($fieldName == 'id') {
                 continue;
             }
-            $columns[] = $key;
-            $params[":{$key}"] = $value;
+            $fields[] = $fieldName;
+            $params[":{$fieldName}"] = $value;
         }
 
-        $tableName = $this->getTableName();
-        $fields = implode(',', $columns);
-        $placeholders = implode(',', array_keys($params));
-        $sql = "INSERT INTO {$tableName} ({$fields}) VALUES ($placeholders)";
-        $this->db->execute($sql, $params);
+        $sql = sprintf(
+            "INSERT INTO %s (%s) VALUES (%s)",
+            static::getTableName(),
+            implode(',', $fields),
+            implode(',', array_keys($params))
+        );
 
-        $this->id = $this->db->lastInsertId();
+        static::getDB()->execute($sql, $params);
+        $this->id = static::getDB()->getLastId();
     }
 
     protected function update()
     {
-        foreach ($this as $key => $value) {
-            echo 'Key^ ' . $key;
-            var_dump($value);
+        $fields = [];
+        $params = [];
+        foreach ($this as $fieldName => $value) {
+            if ($fieldName == 'id') {
+                continue;
+            }
+            $fields[] = $fieldName;
+            $params[":{$fieldName}"] = $value;
         }
+
+        $sql = sprintf(
+            "UPDATE %s SET (%s) WHERE id = :id",
+            static::getTableName(),
+            implode(',', $fields)
+        );
+        static::getDB()->execute($sql, $params);
     }
 
-    public function delete()
+    protected function delete()
     {
         $sql = "DELETE FROM {$this->getTableName()} WHERE id = :id";
-        $this->db->execute($sql, [':id' => $this->id]);
+        static::getDB()->execute($sql, [':id' => $this->id]);
     }
 
     public function save()

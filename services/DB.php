@@ -1,11 +1,10 @@
 <?php
 namespace App\services;
 
-use App\services\SingletonTrait;
-
+use App\traits\SingletonTrait;
 class DB
 {
-    protected $connection;
+    use SingletonTrait ;
 
     private $config = [
         'driver' => 'mysql',
@@ -19,6 +18,8 @@ class DB
     /**
      * @return \PDO
      */
+    private $connection;
+
     protected function getConnection()
     {
         if (empty($this->connection)) {
@@ -53,7 +54,7 @@ class DB
      * @param array $params
      * @return bool|\PDOStatement
      */
-    protected function query(string $sql, array $params = [])
+    protected function query($sql, $params = [])
     {
         $PDOStatement = $this->getConnection()->prepare($sql);
         $PDOStatement->execute($params);
@@ -84,12 +85,12 @@ class DB
         return $PDOStatement->fetchAll();
     }
 
-    public function execute(string $sql, array $params = [])
+    public function execute($sql, $params = [])
     {
         $this->query($sql, $params);
     }
 
-    public function lastInsertId()
+    public function getLastId()
     {
         return $this->getConnection()->lastInsertId();
     }

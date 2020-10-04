@@ -1,6 +1,11 @@
 <?php
 namespace App\models;
 
+/**
+ * Class User
+ * @package app\models
+ * @method  static getAll() self
+ */
 class User extends Model
 {
     public $id;
