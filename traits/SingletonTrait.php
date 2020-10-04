@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\services;
+namespace App\traits;
 
 
 trait SingletonTrait

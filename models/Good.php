@@ -1,6 +1,11 @@
 <?php
 namespace App\models;
 
+/**
+ * Class Good
+ * @package app\models
+ * @method  static getAll() self
+ */
 class Good extends Model
 {
     public $id;
@@ -13,7 +18,7 @@ class Good extends Model
      *
      * @return mixed
      */
-    protected function getTableName():string
+    protected static function getTableName():string
     {
         return 'goods';
     }
