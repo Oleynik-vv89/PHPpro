@@ -1,6 +1,10 @@
 <?php
 use App\services\Autoload;
 
+include dirname(__DIR__) . '/vendor/autoload.php';
+
+new \Twig\Loader\FilesystemLoader();
+
 include dirname(__DIR__) . "/services/Autoload.php";
 spl_autoload_register([(new Autoload()), 'load']);
 
@@ -17,6 +21,7 @@ if (!empty(trim($_GET['a']))) {
 $controllerClass = 'App\\controllers\\' . ucfirst($controllerName) . 'Controller';
 
 if (class_exists($controllerClass)) {
+    $renderer = new \app\services\RenderServices();
     /** @var App\controllers\UserController $controller */
     $controller = new $controllerClass();
     echo $controller->run($actionName);

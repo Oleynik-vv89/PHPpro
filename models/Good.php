@@ -18,7 +18,7 @@ class Good extends Model
      *
      * @return mixed
      */
-    protected function getTableName():string
+    protected static function getTableName():string
     {
         return 'goods';
     }

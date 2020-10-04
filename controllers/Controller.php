@@ -3,10 +3,32 @@
 
 namespace App\controllers;
 
+use App\main\Container;
+use App\services\RenderServices;
+use App\services\Request;
 
 abstract class Controller
 {
-    protected $actionDefault = 'main';
+    protected $actionDefault = 'all';
+    /**
+     * @var RenderServices
+     */
+    protected $renderer;
+    /**
+     * @var Request
+     */
+    protected $request;
+
+    /**
+     * @var Container
+     */
+    protected $container;
+
+    public function __construct(Request $request, Container $container)
+    {
+        $this->container = $container;
+        $this->request = $request;
+    }
 
     public function run($action)
     {
@@ -23,31 +45,37 @@ abstract class Controller
         return $this->$action();
     }
 
-    public function render($template, $params = [])
-    {
-        $content = $this->renderTmpl($template, $params);
-        return $this->renderTmpl(
-            'layouts/main',
-            [
-                'content' => $content
-            ]
-        );
-    }
-
-    public function renderTmpl($template, $params = [])
-    {
-        extract($params);
-        ob_start();
-        include dirname(__DIR__) . '/views/' . $template . '.php';
-        return ob_get_clean();
-    }
-
     protected function getId()
     {
-        if (empty($_GET['id'])) {
-            return 0;
+        return $this->request->getId();
+    }
+
+    protected function redirect($path = '', $msg = '')
+    {
+        if (!empty($msg)) {
+            $_SESSION['msg'] = $msg;
         }
 
-        return (int)$_GET['id'];
+        if (empty($path)) {
+            if (empty($_SERVER['HTTP_REFERER'])) {
+                $path = '/';
+            } else {
+                $path = $_SERVER['HTTP_REFERER'];
+            }
+        }
+
+        header('Location: ' . $path);
+        return '';
+    }
+
+    protected function render($template, $params = [])
+    {
+        return $this->container->renderer->render($template, $params);
+    }
+
+    protected function sendJson($data)
+    {
+        header('Content-Type: application/json');
+        return json_encode($data);
     }
 }

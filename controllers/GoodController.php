@@ -11,13 +11,8 @@ class GoodController extends Controller
     public function allAction()
     {
         $goods = Good::getAll();
-        return $this->render('goodAll', ['goods' => $goods]);
+        return 'Товары';
     }
 
-    public function oneAction()
-    {
-        $id = $this->getId();
-        $goods = Good::getOne($id);
-        return $this->render('goodAOne', ['goodA' => $goods]);
-    }
+
 }
